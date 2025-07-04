@@ -53,3 +53,12 @@ dkms.conf
 
 # debug information files
 *.dwo
+
+# third party library artefacts
+libs
+
+# build artefacts
+build
+
+# clangd
+.cache
