@@ -1,5 +1,5 @@
-#ifndef RAM_DISK_DRIVER
-#define RAM_DISK_DRIVER
+#ifndef RAM_DRIVER
+#define RAM_DRIVER
 
 #include "diskio.h"
 
@@ -18,4 +18,4 @@ DRESULT RAM_disk_read(BYTE*, LBA_t, UINT);
 DRESULT RAM_disk_write(const BYTE*, LBA_t, UINT);
 DRESULT RAM_disk_ioctl(const BYTE*, const BYTE*);
 
-#endif /* RAM_DISK_DRIVER */
+#endif /* RAM_DRIVER */

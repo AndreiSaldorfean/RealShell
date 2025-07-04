@@ -11,6 +11,7 @@ add_executable(${PROJECT_NAME} ${SOURCES})
 target_include_directories(${PROJECT_NAME}
     PRIVATE
     ./inc/
+    ./config/
     ./libs/fatfs/source/
     ./libs/libopencm3_stm32f4/include/
     ./libs/FreeRTOS-Kernel/include/
@@ -27,7 +28,7 @@ add_library(freertos_config INTERFACE)
 
 target_include_directories(freertos_config SYSTEM
 INTERFACE
-    ${CMAKE_SOURCE_DIR}/inc
+    ${CMAKE_SOURCE_DIR}/config
 )
 
 target_compile_definitions(freertos_config
