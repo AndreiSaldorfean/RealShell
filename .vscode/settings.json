@@ -14,6 +14,7 @@
         "diskio.h": "c",
         "ff.h": "c",
         "task.h": "c",
-        "ffconf.h": "c"
+        "ffconf.h": "c",
+        "freertosconfig.h": "c"
     }
 }
