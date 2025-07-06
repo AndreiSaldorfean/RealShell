@@ -1,3 +1,4 @@
+/* ================================================ INCLUDES =============================================== */
 #include "rs_tasks.h"
 #include "stdio.h"
 #include "FreeRTOS.h"
@@ -5,23 +6,32 @@
 #include "task.h"
 #include "ff.h"
 #include "diskio.h"
-#include "ff_ram_driver.h"
+#include <pico/time.h>
+#include <hardware/gpio.h>
+#include "pico/stdio.h"
+#include "stdio.h"
 
-
-FRESULT res;
-FIL File[2];				/* File objects */
-DIR Dir;					/* Directory object */
-FILINFO Finfo;
-UINT bw, br;
-char write_buf[] = "FAT12 test working!\r\n";
-char read_buf[32];
-
-FATFS FatFs;
-
+/* ================================================= MACROS ================================================ */
 #define FN "mydir/File.txt"
 
+/* ============================================ LOCAL VARIABLES ============================================ */
+static FRESULT res;
+static FIL File[2];				/* File objects */
+static DIR Dir;					/* Directory object */
+static FILINFO Finfo;
+static UINT bw, br;
+static char write_buf[] = "FAT12 test working!\r\n";
+static char read_buf[32];
+static FATFS FatFs;
+
+/* ============================================ GLOBAL VARIABLES =========================================== */
 extern BYTE RamDisk[FF_SECTOR_COUNT * FF_MIN_SS] __attribute__ ((aligned (4)));
 
+/* ======================================= LOCAL FUNCTION DECLARATIONS ===================================== */
+static void createFs(void* param);
+static void BlinkyTask(void* param);
+static void HelloWorldTask(void* param);
+/* ======================================== LOCAL FUNCTION DEFINITIONS ===================================== */
 static void createFs(void* param)
 {
     (void)param;
@@ -116,20 +126,38 @@ static void createFs(void* param)
 
     res = f_close(&f);
 
+    while(1){}
+}
 
+static void BlinkyTask(void* param)
+{
+    (void)param;
+
+    while(1){
+        gpio_put(25,1);
+        vTaskDelay(pdMS_TO_TICKS(1000));
+        gpio_put(25,0);
+        vTaskDelay(pdMS_TO_TICKS(1000));
+    }
 }
 
 static void HelloWorldTask(void* param)
 {
     (void)param;
 
-    printf("Hello World!\n");
+    while(1)
+    {
+        printf("Hello World!\n");
+        vTaskDelay(pdMS_TO_TICKS(1000));
+    }
 }
+/* ================================================ MODULE API ============================================= */
 
 void createTasks(void)
 {
-    TaskHandle_t gHelloWorld = NULL;
-    TaskHandle_t createFile = NULL;
+    TaskHandle_t tskHelloWorld = NULL;
+    TaskHandle_t tskCreateFile = NULL;
+    TaskHandle_t tskBlinky = NULL;
     uint32_t status;
 
     (void)status;
@@ -137,16 +165,25 @@ void createTasks(void)
     status = xTaskCreate(
         HelloWorldTask,
         "Hello World Task",
-        100,
+        128,
         NULL,
-        tskIDLE_PRIORITY,
-        &gHelloWorld);
+        1,
+        &tskHelloWorld);
+
+    status = xTaskCreate(
+        BlinkyTask,
+        "Blinky Task",
+        128,
+        NULL,
+        1,
+        &tskBlinky);
 
     status = xTaskCreate(
         createFs,
         "Create File Task",
-        100,
+        1024,
         NULL,
         tskIDLE_PRIORITY,
-        &createFile);
+        &tskCreateFile);
 }
+

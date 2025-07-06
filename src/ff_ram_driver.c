@@ -1,10 +1,15 @@
+/* ================================================ INCLUDES =============================================== */
 #include "ff_ram_driver.h"
 #include "string.h"
 #include "ffconf.h"
 
-BYTE RamDisk[FF_MIN_SS * FF_SECTOR_COUNT] __attribute__ ((aligned (4)));
-#define N_SEC_TRACK 63			/* Sectors per track for determination of drive CHS */
-
+/* ================================================= MACROS ================================================ */
+/* ============================================ LOCAL VARIABLES ============================================ */
+static BYTE RamDisk[FF_MIN_SS * FF_SECTOR_COUNT] __attribute__ ((aligned (4)));
+/* ============================================ GLOBAL VARIABLES =========================================== */
+/* ======================================= LOCAL FUNCTION DECLARATIONS ===================================== */
+/* ======================================== LOCAL FUNCTION DEFINITIONS ===================================== */
+/* ================================================ MODULE API ============================================= */
 DRESULT RAM_disk_status()
 {
     // Always ready
@@ -52,3 +57,4 @@ DRESULT RAM_disk_ioctl(const BYTE* cmd, const BYTE* buff)
             return RES_PARERR;
     }
 }
+
