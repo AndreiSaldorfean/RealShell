@@ -1,5 +1,11 @@
 # Prerequisites
 *.d
+*.html
+*.png
+*.zip
+*.xlsx
+*.txt
+*.css
 
 # Object files
 *.o
