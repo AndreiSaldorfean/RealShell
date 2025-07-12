@@ -1,11 +1,9 @@
 /* ================================================ INCLUDES =============================================== */
 #include "rs_init.h"
 #include "rs_tasks.h"
-#include "FreeRTOS.h"
 #include "FreeRTOSConfig.h"
+#include "FreeRTOS.h"
 #include "task.h"
-#include "ff.h"
-#include "pico/stdio.h"
 #include "stdio.h"
 #include <pico/time.h>
 

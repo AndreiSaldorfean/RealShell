@@ -10,6 +10,8 @@
 #include <hardware/gpio.h>
 #include "pico/stdio.h"
 #include "stdio.h"
+#include "sd_io.h"
+#include "string.h"
 
 /* ================================================= MACROS ================================================ */
 #define FN "mydir/File.txt"
@@ -26,6 +28,7 @@ static FATFS FatFs;
 
 /* ============================================ GLOBAL VARIABLES =========================================== */
 extern BYTE RamDisk[FF_SECTOR_COUNT * FF_MIN_SS] __attribute__ ((aligned (4)));
+extern SD_DEV dev[1];
 
 /* ======================================= LOCAL FUNCTION DECLARATIONS ===================================== */
 static void createFs(void* param);
@@ -37,11 +40,11 @@ static void createFs(void* param)
     (void)param;
 
     MKFS_PARM opt = {
-        .fmt = FM_FAT,
+        .fmt = FM_FAT32,
         .align = 0,
         .au_size = 0,
         .n_fat = 1,
-        .n_root = 512
+        .n_root = 0
     };
 
     BYTE buffer[FF_MIN_SS];
@@ -151,12 +154,49 @@ static void HelloWorldTask(void* param)
         vTaskDelay(pdMS_TO_TICKS(1000));
     }
 }
+
+static void sdTester(void* param)
+{
+    uint8_t buffer[512] = "Hello World!";    // Example of your buffer data
+    (void)param;
+
+    SDRESULTS res;
+    // Part of your initialization code here
+
+    if(SD_Init(dev)!=SD_OK)
+    {
+        printf("SD init failed!\n");
+    }
+    // You can read the sd card. For example you can read from the second
+    // sector the set of bytes between [04..20]:
+    // - Second sector is 1
+    // - Offset is 4
+    // - Bytes to count is 16 (20 minus 4)
+    printf("%s\n",buffer);
+    res = SD_Write(dev, (void*)buffer, 1);
+    if(res!=SD_OK)
+    {
+        printf("failed!\n");
+    }
+    memset(buffer,0,sizeof(buffer));
+    printf("%s\n",buffer);
+    res = SD_Read(dev, (void*)buffer, 1, 0, 512);
+    printf("%s\n",buffer);
+    if(res!=SD_OK)
+    {
+        printf("failed!\n");
+    }
+    while(1)
+    {
+    }
+}
 /* ================================================ MODULE API ============================================= */
 
 void createTasks(void)
 {
     TaskHandle_t tskHelloWorld = NULL;
     TaskHandle_t tskCreateFile = NULL;
+    TaskHandle_t tskSdTester = NULL;
     TaskHandle_t tskBlinky = NULL;
     uint32_t status;
 
@@ -179,11 +219,20 @@ void createTasks(void)
         &tskBlinky);
 
     status = xTaskCreate(
+        sdTester,
+        "SD tester task",
+        512,
+        NULL,
+        1,
+        &tskSdTester);
+
+    status = xTaskCreate(
         createFs,
         "Create File Task",
-        1024,
+        512,
         NULL,
-        tskIDLE_PRIORITY,
+        1,
         &tskCreateFile);
+    // printf("status= %d\n", status);
 }
 
