@@ -15,11 +15,6 @@ target_compile_definitions(freertos_config
 
 add_subdirectory(${CMAKE_SOURCE_DIR}/libs/FreeRTOS-Kernel)
 
-target_include_directories(freertos_kernel
-    PRIVATE
-    ./libs/FreeRTOS-Kernel/include/
-)
-
 include_directories(
     PRIVATE
     ./libs/FreeRTOS-Kernel/portable/ThirdParty/GCC/RP2040/include/
