@@ -1,17 +1,17 @@
 #!/bin/bash
 
-DEVICE="/dev/ttyACM0"
+PORT="/dev/ttyACM0"
 BAUD=115200
 
 while true; do
-    if [ -e "$DEVICE" ]; then
+    if [ -e "$PORT" ]; then
         echo "Device connected. Starting screen..."
-        screen "$DEVICE" $BAUD
+        screen "$PORT" $BAUD
 
         echo "Screen exited or device removed. Waiting..."
     else
         clear
-        echo "Waiting for $DEVICE..."
+        echo "Waiting for $PORT..."
         sleep 1
     fi
     sleep 1

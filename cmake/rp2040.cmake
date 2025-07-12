@@ -37,3 +37,4 @@ set(CMAKE_EXECUTABLE_SUFFIX ".elf")
 # Prevent TinyUSB from re-importing the SDK incorrectly
 set(PICO_SDK_PATH ${CMAKE_SOURCE_DIR}/libs/pico-sdk CACHE PATH "Path to the Pico SDK" FORCE)
 set(PICO_TINYUSB_PATH ${PICO_SDK_PATH}/lib/tinyusb CACHE PATH "TinyUSB source path")
+set(PICO_RAM_VECTOR_TABLE_SIZE 48)

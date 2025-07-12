@@ -5,7 +5,6 @@
 #include "FreeRTOS.h"
 #include "FreeRTOSConfig.h"
 #include "task.h"
-#include "errno.h"
 #include "ff.h"
 
 /* ================================================= MACROS ================================================ */

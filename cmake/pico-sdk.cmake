@@ -7,4 +7,5 @@ pico_add_extra_outputs(${PROJECT_NAME})
 include_directories(PRIVATE
     ./libs/pico-sdk/src/common/pico_stdlib_headers/include/
     ./libs/pico-sdk/src/common/pico_base_headers/include/
+    ./libs/pico-sdk/lib/lwip/src/include/
 )
